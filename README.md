@@ -25,8 +25,8 @@ pip --version
 
 ```
 cd $HOME
-git clone https://github.com/neoslab/papperscrapper
-cd $HOME/papperscrapper
+git clone https://github.com/neoslab/papdex
+cd $HOME/papdex
 python -m pip install -r requirements.txt
 ```
 
@@ -37,13 +37,13 @@ python -m pip install -r requirements.txt
 # Upgrade PIP if needed
 
 ```
-C:\<USER\FULLPATH>\papperscrapper\.venv\Scripts\python.exe -m pip install --upgrade pip
+C:\<USER\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install --upgrade pip
 ```
 
 # Install requirements
 
 ```
-C:\<USER\FULLPATH>\papperscrapper\.venv\Scripts\python.exe -m pip install -r C:\<USER\FULLPATH>\papperscrapper\.venv\requirements.txt
+C:\<USER\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install -r C:\<USER\FULLPATH>\papdex\.venv\requirements.txt
 ```
 
 * * *

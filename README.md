@@ -43,7 +43,7 @@ C:\<DIRECTORY\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install --upgrade
 # Install requirements
 
 ```
-C:\<USER\DIRECTORY>\papdex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papdex\.venv\requirements.txt
+C:\<DIRECTORY\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papdex\.venv\requirements.txt
 ```
 
 * * *

@@ -45,13 +45,13 @@ nohup python handler.py > output-handler.log 2>&1 &
 # Upgrade PIP if needed
 
 ```bash
-C:\<DIRECTORY\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install --upgrade pip
+C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install --upgrade pip
 ```
 
 # Install requirements
 
 ```bash
-C:\<DIRECTORY\FULLPATH>\papdex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papdex\.venv\requirements.txt
+C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papindex\.venv\requirements.txt
 ```
 
 * * *

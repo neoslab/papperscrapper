@@ -51,7 +51,7 @@ C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install --upgra
 # Install requirements
 
 ```bash
-C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papindex\.venv\requirements.txt
+C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papindex\requirements.txt
 ```
 
 * * *

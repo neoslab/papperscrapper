@@ -57,27 +57,54 @@ service = Service("chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
 
-# Convert K/M/B values
-def convertnbr(val):
-    val = val.replace(" ", "").replace("€", "").replace(",", ".")
+# Function 'ConvertNBR'
+def ConvertNBR(valsize):
+    """
+    This function standardizes and converts shorthand numerical strings representing monetary or quantity values
+    into full integer string representations. It handles common suffixes such as 'K', 'M', and 'B', which stand for
+    thousand, million, and billion respectively. This function is particularly useful for normalizing data extracted
+    from user inputs, financial documents, or scraped websites where such formats are often used.
+
+    Parameters:
+    - valsize (str): A string representing a numeric value, potentially with a 'K', 'M', or 'B' suffix and including
+      symbols such as spaces, commas, or the euro sign (€).
+
+    Returns:
+    - str: A string representation of the integer after conversion. If the input cannot be parsed or converted,
+      it returns the cleaned original string without suffix interpretation.
+    """
+    valsize = valsize.replace(" ", "").replace("€", "").replace(",", ".")
     multiplier = 1
-    if val.endswith("K"):
+    if valsize.endswith("K"):
         multiplier = 1_000
-        val = val[:-1]
-    elif val.endswith("M"):
+        valsize = valsize[:-1]
+    elif valsize.endswith("M"):
         multiplier = 1_000_000
-        val = val[:-1]
-    elif val.endswith("B"):
+        valsize = valsize[:-1]
+    elif valsize.endswith("B"):
         multiplier = 1_000_000_000
-        val = val[:-1]
+        valsize = valsize[:-1]
     try:
-        return str(int(float(val) * multiplier))
-    except:
-        return val
+        return str(int(float(valsize) * multiplier))
+    except (ValueError, TypeError):
+        return valsize
 
 
-# Format column headers for CSV output
-def formatheader(col):
+# Function 'FornatHeader'
+def FormatHeader(col):
+    """
+    This function is responsible for converting French-language financial column headers into their English-language
+    equivalents. It supports an optional suffix pattern for years (e.g., "_2023") and appends the year to the translated
+    header where applicable. It is commonly used in data transformation pipelines for rendering financial reports,
+    dashboards, or CSV exports in a more internationally readable format.
+
+    Parameters:
+    - col (str): A string representing the original French column name, optionally suffixed with a 4-digit year (e.g., "Chiffre d'affaires (€)_2022").
+
+    Returns:
+    - str: A translated English version of the column name, optionally appended with the year if it was present in the original.
+           If no translation is found or the input does not match expected patterns, the original string is returned unchanged.
+    """
     translations = {
         "Autonomie financière (%)": "Financial Autonomy (%)",
         "BFR (j de CA)": "Working Capital Requirement (Days of Revenue)",
@@ -122,12 +149,12 @@ def formatheader(col):
         "État des dettes à 1 an au plus (€)": "Short-Term Debt (€)"
     }
 
-    match = re.match(r"^(.*)_([0-9]{4})$", col)
-    if match:
-        label = match.group(1).strip()
-        year = match.group(2)
-        translated_label = translations.get(label, label).strip()
-        return f"{translated_label} - {year}"
+    matchcol = re.match(r"^(.*)_([0-9]{4})$", col)
+    if matchcol:
+        group = matchcol.group(1).strip()
+        period = matchcol.group(2)
+        trans = translations.get(group, group).strip()
+        return f"{trans} - {period}"
     return col
 
 
@@ -262,7 +289,7 @@ for idx, url in enumerate(uniqlinks, 1):
                 key = row.select_one("th").get_text(strip=True)
                 value = row.select_one("td").get_text(strip=True)
                 if "Code NAF" in key:
-                    match = re.search(r"([\d\.A-Z]+)", value)
+                    match = re.search(r"([\d\\.A-Z]+)", value)
                     if match:
                         data["APE"] = match.group(1).replace(".", "")
                 elif "Domaine" in key:
@@ -299,7 +326,7 @@ for idx, url in enumerate(uniqlinks, 1):
                     if i + 1 >= len(cols):
                         continue
                     val = cols[i + 1].get_text(strip=True).replace("\xa0", " ")
-                    val = convertnbr(val)
+                    val = ConvertNBR(val)
                     ecodata[year][label] = val if val else "ND"
 
             for year in target_years:
@@ -340,7 +367,7 @@ for y in year_order:
     finalheader.extend(sorted(set(year_columns_by_year[y]), key=lambda x: x.lower()))
 
 # Write to CSV
-formatted_header = [formatheader(col) for col in finalheader]
+formatted_header = [FormatHeader(col) for col in finalheader]
 with open(csvfile, "w", encoding="utf-8", newline="") as f:
     writer = csv.DictWriter(f, fieldnames=finalheader)
     writer.writerow(dict(zip(finalheader, formatted_header)))

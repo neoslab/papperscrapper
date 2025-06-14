@@ -1,6 +1,12 @@
-# Server Setup
+# Papindex
 
-## Update/upgrade machine
+This Python script is a powerful, automated web scraper tailored for extracting detailed company profiles from Pappers.fr. It focuses on French companies that meet specific business criteria and are located within specified postal codes. Designed for structured financial analysis, lead generation, or compliance research, the script utilizes Selenium with BeautifulSoup, allowing it to navigate dynamic web pages and extract high-value data into a structured CSV format.
+
+* * *
+
+## Server Setup
+
+### Update/upgrade machine
 
 ```bash
 sudo apt -y update && sudo apt -y upgrade && sudo apt -y dist-upgrade
@@ -8,7 +14,7 @@ sudo apt -y remove && sudo apt -y autoremove
 sudo apt -y clean && sudo apt -y autoclean
 ```
 
-## Install Python Packages
+### Install Python Packages
 
 ```bash
 sudo apt install -y python3 python3-bs4 python3-cryptography python3-dateutil \
@@ -21,7 +27,7 @@ python --version
 pip --version
 ```
 
-## Clone Project Repository
+### Clone Project Repository
 
 ```bash
 cd $HOME
@@ -32,7 +38,7 @@ source papindex/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-## Launch the scrapper
+### Launch the scrapper
 
 ```bash
 nohup python handler.py > output-handler.log 2>&1 &
@@ -40,15 +46,15 @@ nohup python handler.py > output-handler.log 2>&1 &
 
 * * *
 
-## Windows PyCharm Setup
+### Windows PyCharm Setup
 
-# Upgrade PIP if needed
+**Upgrade PIP if needed**
 
 ```bash
 C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install --upgrade pip
 ```
 
-# Install requirements
+**Install requirements**
 
 ```bash
 C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install -r C:\<DIRECTORY\FULLPATH>\papindex\requirements.txt
@@ -56,9 +62,9 @@ C:\<DIRECTORY\FULLPATH>\papindex\.venv\Scripts\python.exe -m pip install -r C:\<
 
 * * *
 
-# ChromeDriver
+## ChromeDriver
 
-## Grab the correct version of ChromeDriver
+### Grab the correct version of ChromeDriver
 
 Once downloaded, place the `chromedriver` file in the root directory of the project.
 
@@ -66,6 +72,12 @@ Once downloaded, place the `chromedriver` file in the root directory of the proj
 https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
 ```
 
-## License
+### License
 
 This script is open source under the [MIT License](LICENSE).
+
+* * *
+
+### Contact
+
+Created by [@neoslab](https://neoslab.com/contact/) – Feel free to reach out!

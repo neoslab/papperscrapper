@@ -1,4 +1,4 @@
-# Import libraries
+# === Import libraries ===
 import json
 import os
 import csv
@@ -6,7 +6,7 @@ import time
 import random
 import re
 
-# Import packages
+# === Import packages ===
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -14,24 +14,24 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
-# Load config file
+# === Define 'postalcodes' ===
 with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 postalcodes = config.get("postalcodes", [])
 
-# Define links file
+# === Define 'linksfile' ===
 linksfile = "linksfile.txt"
 
-# Define CSV file
+# === Define 'csvfile' ===
 csvfile = "companies.csv"
 
-# Define base link
+# === Define 'baselink' ===
 baselink = "https://www.pappers.fr"
 
-# Define get links array
+# === Define 'getlinks' ===
 getlinks = []
 
-# Define base fields columns
+# === Define 'basefields' ===
 basefields = [
     "URL", "Name", "Alias", "SIREN", "Status", "Address", "Activity",
     "Effectif", "Creation Date", "Dirigeant Name", "Dirigeant Age",
@@ -39,13 +39,13 @@ basefields = [
     "Closure Date", "RCS Update", "RNE Update", "INSEE Update"
 ]
 
-# Clean-up
+# === Clean-up ===
 if os.path.exists(linksfile):
     os.remove(linksfile)
 if os.path.exists(csvfile):
     os.remove(csvfile)
 
-# Setup Selenium
+# === Setup Selenium ===
 options = Options()
 options.add_argument("--headless")
 options.add_argument("--disable-gpu")
@@ -53,12 +53,13 @@ options.add_argument("--window-size=1920,1080")
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                      "AppleWebKit/537.36 (KHTML, like Gecko) "
                      "Chrome/122.0.0.0 Safari/537.36")
+
 service = Service("chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
 
-# Function 'ConvertNBR'
-def ConvertNBR(valsize):
+# === Function 'convertnbr' ===
+def convertnbr(valsize):
     """
     This function standardizes and converts shorthand numerical strings representing monetary or quantity values
     into full integer string representations. It handles common suffixes such as 'K', 'M', and 'B', which stand for
@@ -90,8 +91,8 @@ def ConvertNBR(valsize):
         return valsize
 
 
-# Function 'FornatHeader'
-def FormatHeader(col):
+# === Function 'formatheader' ===
+def formatheader(col):
     """
     This function is responsible for converting French-language financial column headers into their English-language
     equivalents. It supports an optional suffix pattern for years (e.g., "_2023") and appends the year to the translated
@@ -158,7 +159,7 @@ def FormatHeader(col):
     return col
 
 
-# Loop callback
+# === Loop callback ===
 for postalcode in postalcodes:
     print(f"\nSearching in postal code: {postalcode}")
     baseurl = "https://www.pappers.fr/recherche"
@@ -190,13 +191,13 @@ for postalcode in postalcodes:
         except NoSuchElementException:
             break
 
-# Save links
+# === Save links ===
 uniqlinks = sorted(set(getlinks))
 with open(linksfile, "w", encoding="utf-8") as f:
     for link in uniqlinks:
         f.write(link + "\n")
 
-# Process links
+# === Process links ===
 allrows = []
 print("\r")
 for idx, url in enumerate(uniqlinks, 1):
@@ -238,7 +239,6 @@ for idx, url in enumerate(uniqlinks, 1):
                 elif key == "Création :":
                     data["Creation Date"] = value
 
-        # Scrape first dirigeant details (name + age/date)
         ownership = soup.select_one("#dirigeants .dirigeant")
         if ownership:
             nametag = ownership.select_one(".nom a")
@@ -326,7 +326,7 @@ for idx, url in enumerate(uniqlinks, 1):
                     if i + 1 >= len(cols):
                         continue
                     val = cols[i + 1].get_text(strip=True).replace("\xa0", " ")
-                    val = ConvertNBR(val)
+                    val = convertnbr(val)
                     ecodata[year][label] = val if val else "ND"
 
             for year in target_years:
@@ -344,7 +344,7 @@ for idx, url in enumerate(uniqlinks, 1):
 
 driver.quit()
 
-# Reorder columns
+# === Reorder columns ===
 finalheader = [col for col in basefields]
 seen = set(finalheader)
 year_order = ["2023", "2022", "2021", "2020"]
@@ -366,8 +366,8 @@ for row in allrows:
 for y in year_order:
     finalheader.extend(sorted(set(year_columns_by_year[y]), key=lambda x: x.lower()))
 
-# Write to CSV
-formatted_header = [FormatHeader(col) for col in finalheader]
+# === Write to CSV ===
+formatted_header = [formatheader(col) for col in finalheader]
 with open(csvfile, "w", encoding="utf-8", newline="") as f:
     writer = csv.DictWriter(f, fieldnames=finalheader)
     writer.writerow(dict(zip(finalheader, formatted_header)))
